@@ -1,0 +1,8 @@
+.rock {
+  animation: attack 5s ease
+}
+
+@keyframes attack {
+  from { right : 0px; }
+  to { right : 200px; }
+}
