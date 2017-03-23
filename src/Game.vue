@@ -13,11 +13,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import store from './store'
 
-window.onkeypress = function(){
-  if( store.state.onTheGround ){
-    store.commit('jump')
-  }
-};
 window.onload = function(){
   var $rock = $("<div id='rock'>");
   $("#app").append($rock);
@@ -60,11 +55,40 @@ export default {
       return store.state.count
     },
   },
+  watch: {
+    jumpHeight: function(val, oldVal){
+      // console.log(val+oldVal);
+    }
+  },
 
   methods: {
     press () {
       store.commit('increment')
     },
+    start () {
+      console.log('start !')
+      // setInterval(function(){
+      //   if ( isOverlap('person', 'rock') ) {
+      //     alert('you die !');
+      //   }
+
+      // },100);
+    },
+    jump () {
+      if( store.state.onTheGround ){
+        store.commit('jump')
+      }
+    }
+  },
+
+  mounted () {
+    this.start()
+  },
+  created () {
+    window.onkeypress = this.jump
+  },
+  destroyed () {
+    window.onkeypress = null
   }
 }
 

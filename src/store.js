@@ -37,5 +37,6 @@ export default new Vuex.Store({
     rockDisAppear: state => {
       state.rockLive = false;
     }
+
   }
 })
