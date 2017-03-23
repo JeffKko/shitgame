@@ -22,5 +22,11 @@ export default {
   },
   rockDisAppear: state => {
     state.rockLive = false;
+  },
+  setLive: (state, boolean) => {
+    state.live = boolean
+  },
+  rockAnimate: (state, boolean) => {
+    state.$rock.toggleClass('rock', boolean)
   }
 }

@@ -11,36 +11,7 @@
 <script>
 import Vue from 'vue'
 import Vuex from 'vuex'
-import store from './store'
-
-window.onload = function(){
-  var $rock = $("<div id='rock'>");
-  $("#app").append($rock);
-
-  setInterval(function(){
-
-    if( Math.random() > 0.5 && !store.state.rockLive ) {
-      $rock.addClass('rock');
-      store.commit('rockAppear');
-
-      var checkRock = setInterval(function(){
-        if( !isOverlap('app', 'rock') ){
-          $rock.removeClass('rock');
-          clearInterval(checkRock);
-          store.commit('rockDisAppear');
-        }
-      },100);
-    }
-
-  }, 1000);
-
-  setInterval(function(){
-    if ( isOverlap('person', 'rock') ) {
-      alert('you die !');
-    }
-
-  },100);
-}
+import store from './store/index.js'
 
 export default {
   name: 'app',
@@ -62,22 +33,21 @@ export default {
   },
 
   methods: {
-    press () {
-      store.commit('increment')
-    },
     start () {
       console.log('start !')
-      // setInterval(function(){
-      //   if ( isOverlap('person', 'rock') ) {
-      //     alert('you die !');
-      //   }
-
-      // },100);
+    },
+    stop () {
+      console.log('stop')
+      store.dispatch('gameOver');
+      this.rockAnimate(false);
     },
     jump () {
       if( store.state.onTheGround ){
-        store.commit('jump')
+        store.dispatch('jump')
       }
+    },
+    rockAnimate (boolean) {
+      store.dispatch('rockAnimate', boolean)
     }
   },
 
@@ -86,6 +56,33 @@ export default {
   },
   created () {
     window.onkeypress = this.jump
+    window.onload = ()=> {
+      $("#app").append(store.state.$rock);
+
+      var goRock = setInterval( ()=>{
+
+        if( Math.random() > 0.5 && !store.state.rockLive ) {
+          this.rockAnimate(true);
+          store.commit('rockAppear');
+
+          var checkRock = setInterval( ()=>{
+            if( !isOverlap('app', 'rock') ){
+              this.rockAnimate(false);
+              clearInterval(checkRock);
+              store.commit('rockDisAppear');
+            }
+          },100);
+        }
+
+      }, 1000);
+
+      setInterval( ()=> {
+        if ( isOverlap('person', 'rock') ) {
+          this.stop();
+          clearInterval(goRock);
+        }
+      },100);
+    }
   },
   destroyed () {
     window.onkeypress = null
