@@ -5,3 +5,5 @@ const app = new Vue({
   el: '#app',
   render: h => h(Game)
 })
+
+console.log(app)
